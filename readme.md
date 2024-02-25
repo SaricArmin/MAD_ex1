@@ -12,14 +12,30 @@
 <span style="color:blue">Provide your answer here! </span>
 > Note: you can also use code snippets to illustrate your answer. 
 
+
 ```kotlin 
 // example code snippet
 val a: String = "value" // non-null type
+a = null // this will not compile
+val b: String? = null // the '?' indicates that the type is nullable
+b = "value" // this will compile
+
 ```
 
 ### What are lambda expressions and higher order functions in Kotlin? Why would you store a function inside a variable? (0,5 points)
-
-<span style="color:blue">Provide your answer here!</span>
+Lambda expressions:
+These are simply ways to write small pieces of functions (or "mini-functions") directly in the code without formally declaring them.
+They are useful if you need to quickly pass a function as an argument to another function.
+```kotlin 
+val addOne = { number: Int -> number + 1 } // a "mini-function" that adds 1 to a number
+```
+Higher functions: These are functions that take other functions as arguments or return them as results.
+They are useful because they allow you to make code more flexible and reusable.
+```kotlin 
+fun applyOperation(a: Int, b: Int, operation: (Int, Int) -> Int): Int {
+    return operation(a, b) //call the 'operation' function that was passed as an argument
+}
+```
 
 ### Provide a solution for the following number guessing game inside `App.kt`. (3 points)
 
