@@ -4,8 +4,6 @@
 package at.ac.fhcampuswien
 import kotlin.random.Random
 import kotlin.random.nextInt
-
-
 class App {
     // Game logic for a number guessing game
     fun playNumberGame(digitsToGuess: Int = 4) {
@@ -18,9 +16,9 @@ class App {
             userGuess = readln().toInt()
             result = checkUserInputAgainstGeneratedNumber(userGuess, randomNumber)
             println(result)
-            println("das result rn: " + result.m)
+            println("das result rn M: " + result.m)
+            println("das result rn N: " + result.n)
         } while (result.m != digitsToGuess)
-
         println("gz, $randomNumber")
     }
 
@@ -39,6 +37,7 @@ class App {
      * @throws IllegalArgumentException if the length is more than 9 or less than 1.
      */
     val generateRandomNonRepeatingNumber: (Int) -> Int = { length ->
+        //https://www.baeldung.com/kotlin/random-number
         require(length in 1..9) { "number can be only 1-9" } // throws the illegalargumentexception
         val digits = (1..9).shuffled().take(length).joinToString("")
         digits.toInt()
@@ -61,23 +60,28 @@ class App {
      * @throws IllegalArgumentException if the inputs do not have the same number of digits.
      */
     val checkUserInputAgainstGeneratedNumber: (Int, Int) -> CompareResult = { input, generatedNumber ->
-        val input_str = input.toString()
-        val generated_str = generatedNumber.toString()
+        val guessAsString = input.toString()
+        val targetAsString = generatedNumber.toString()
 
-        if (input_str.length != generated_str.length) {
-            throw IllegalArgumentException("not same length of both strings")
+        if (guessAsString.length != targetAsString.length) {
+            throw IllegalArgumentException("input must have same length as generatedNumber")
         }
-        var correct_pos = 0
-        var correct_dig = 0
-        val seen = mutableSetOf<Char>()
-        for (i in input_str.indices) {
-            if (input_str[i] == generated_str[i]) correct_pos++
-            if (input_str[i] in generated_str && input_str[i] !in seen) {
-                correct_dig++
-                seen.add(input_str[i])
+
+        var matches = 0
+        var exactMatches = 0
+        val countedDigits = mutableSetOf<Char>()
+
+        guessAsString.forEachIndexed { index, digit ->
+            if (digit in targetAsString && digit !in countedDigits) {
+                matches++
+                countedDigits.add(digit)
+            }
+            if (digit == targetAsString[index]) {
+                exactMatches++
             }
         }
-        CompareResult(correct_dig, correct_pos)
+
+        CompareResult(matches, exactMatches)
     }
 }
 
